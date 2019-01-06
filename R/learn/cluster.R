@@ -35,15 +35,18 @@ clusterEvalQ( cl, { library(expm) } )
 # ans <- clusterEvalQ(cl, { mean( rnorm(10E6))} )
 
 lslen <- seq(1E3) #2E6
+testfunc <- function(x){matrix(seq(100), nrow=10)%^%x}
+
+clusterExport(cl, "testfunc")
 
 # harder problem
 startime <- now()
-ans <- parLapply( cl, lslen , function(x){matrix(seq(100), nrow=10)%^%x})
+ans <- parLapply( cl, lslen , testfunc )
 endtime <- now()
 rm(ans)
 
 start1 <- now()
-ans1 <- lapply( lslen, function(x){matrix(seq(100), nrow=10)%^%x})
+ans1 <- lapply( lslen, testfunc)
 end1 <- now()
 rm(ans1)
 
